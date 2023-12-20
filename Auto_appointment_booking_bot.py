@@ -37,6 +37,12 @@ def main(startdate, enddate, Location):
     random_proxy = random.choice(PROXIES)
     chrome_options = Options()
     # chrome_options.add_argument(f'--proxy-server={random_proxy}')
+
+    # this driver is define for linux  if it don't work in the windows so uncomment the below code
+
+    # chromedriver_path = 'path/to/chromedriver.exe'
+    # driver = webdriver.Chrome(executable_path=chromedriver_path)
+
     chrome_service = ChromeService(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
     driver.maximize_window()
