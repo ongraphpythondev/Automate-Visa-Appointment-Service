@@ -53,8 +53,6 @@ def get_calendar_end_month_year_elements(driver):
     ), datepicker_title_div[1].find_element(By.CLASS_NAME, "ui-datepicker-year")
 
 
-
-
 def get_full_calendar_date(month_element, year_element):
     return f"{month_element.text} {year_element.text}"
 
@@ -85,16 +83,25 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                 ).click()
 
                 sleep(3)
-                
-                startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
-                full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
-                print(full_startdate_calender,1111111111)
-                
-                
-                enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
-                full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
-                print(full_enddate_calender,22222)
-                
+
+                (
+                    startdate_month_element,
+                    startdate_year_element,
+                ) = get_calendar_start_month_year_elements(driver)
+                full_startdate_calender = get_full_calendar_date(
+                    startdate_month_element, startdate_year_element
+                )
+                print(full_startdate_calender, 1111111111)
+
+                (
+                    enddate_month_element,
+                    enddate_year_element,
+                ) = get_calendar_end_month_year_elements(driver)
+                full_enddate_calender = get_full_calendar_date(
+                    enddate_month_element, enddate_year_element
+                )
+                print(full_enddate_calender, 22222)
+
                 if (
                     User_start_date == full_startdate_calender
                     and User_end_date == full_enddate_calender
@@ -137,17 +144,23 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                             ).click()
                             sleep(3)
 
-                    
-                            
-                            startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
-                            full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
-                            print(full_startdate_calender,1111111111)
-                            
-                            
-                            enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
-                            full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
-                            print(full_enddate_calender,22222)
-                            
+                            (
+                                startdate_month_element,
+                                startdate_year_element,
+                            ) = get_calendar_start_month_year_elements(driver)
+                            full_startdate_calender = get_full_calendar_date(
+                                startdate_month_element, startdate_year_element
+                            )
+                            print(full_startdate_calender, 1111111111)
+
+                            (
+                                enddate_month_element,
+                                enddate_year_element,
+                            ) = get_calendar_end_month_year_elements(driver)
+                            full_enddate_calender = get_full_calendar_date(
+                                enddate_month_element, enddate_year_element
+                            )
+                            print(full_enddate_calender, 22222)
 
                             if not full_enddate_calender:
                                 break
@@ -185,7 +198,7 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                                 break
                         except Exception as e:
                             break
-                else:                    
+                else:
                     if User_start_date == full_startdate_calender:
                         print("inside the loop")
                         while (
@@ -193,14 +206,23 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                             or User_end_date != full_enddate_calender
                         ):
                             try:
-                                startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
-                                full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
-                                print(full_startdate_calender,1111111111)
-                                
-                                
-                                enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
-                                full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
-                                print(full_enddate_calender,22222)
+                                (
+                                    startdate_month_element,
+                                    startdate_year_element,
+                                ) = get_calendar_start_month_year_elements(driver)
+                                full_startdate_calender = get_full_calendar_date(
+                                    startdate_month_element, startdate_year_element
+                                )
+                                print(full_startdate_calender, 1111111111)
+
+                                (
+                                    enddate_month_element,
+                                    enddate_year_element,
+                                ) = get_calendar_end_month_year_elements(driver)
+                                full_enddate_calender = get_full_calendar_date(
+                                    enddate_month_element, enddate_year_element
+                                )
+                                print(full_enddate_calender, 22222)
                                 if not full_enddate_calender:
                                     print("Error: End date not getting updated.")
                                     break
@@ -252,8 +274,6 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
 
             if location_found:
                 break
-            
-                
 
         else:
             selected_locations = [
@@ -265,7 +285,7 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                 User_end_date,
                 selected_options=selected_locations,
             )
-    if not location_found:        
+    if not location_found:
         interact_with_dropdown(driver, User_start_date, User_end_date, selected_options)
 
     return location_found
