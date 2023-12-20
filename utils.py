@@ -9,6 +9,7 @@ from time import sleep
 # This function is for login activity
 def login(driver, url, username, password):
     driver.get(url)
+    sleep(2)
     WebDriverWait(driver, 50).until(
         EC.presence_of_element_located((By.ID, "user_email"))
     ).send_keys(username)
@@ -38,6 +39,26 @@ def navigate_to_schedule_appointment(driver):
     sleep(3)
 
 
+def get_calendar_start_month_year_elements(driver):
+    datepicker_title_div = driver.find_elements(By.CLASS_NAME, "ui-datepicker-title")
+    return datepicker_title_div[0].find_element(
+        By.CLASS_NAME, "ui-datepicker-month"
+    ), datepicker_title_div[0].find_element(By.CLASS_NAME, "ui-datepicker-year")
+
+
+def get_calendar_end_month_year_elements(driver):
+    datepicker_title_div = driver.find_elements(By.CLASS_NAME, "ui-datepicker-title")
+    return datepicker_title_div[1].find_element(
+        By.CLASS_NAME, "ui-datepicker-month"
+    ), datepicker_title_div[1].find_element(By.CLASS_NAME, "ui-datepicker-year")
+
+
+
+
+def get_full_calendar_date(month_element, year_element):
+    return f"{month_element.text} {year_element.text}"
+
+
 # This Fuction is for get the day of appoinment of the given range and covered all the usecase of the daterange
 def interact_with_dropdown(driver, User_start_date, User_end_date, selected_options=[]):
     dropdown = Select(
@@ -48,7 +69,6 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
     for selected_option in selected_options:
         if selected_option:
             dropdown.select_by_visible_text(selected_option.capitalize().strip())
-
             sleep(2)
 
             try:
@@ -65,39 +85,16 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                 ).click()
 
                 sleep(3)
-
-                datepicker_title_div = driver.find_elements(
-                    By.CLASS_NAME, "ui-datepicker-title"
-                )
-
-                # startdate
-                startdate_month_element = datepicker_title_div[0].find_element(
-                    By.CLASS_NAME, "ui-datepicker-month"
-                )
-                startdate_year_element = datepicker_title_div[0].find_element(
-                    By.CLASS_NAME, "ui-datepicker-year"
-                )
-
-                startdate_month_text = startdate_month_element.text
-                startdate_year_text = startdate_year_element.text
-
-                full_startdate_calender = (
-                    f"{startdate_month_text} {startdate_year_text}"
-                )
-
-                # enddate
-                enddate_month_element = datepicker_title_div[1].find_element(
-                    By.CLASS_NAME, "ui-datepicker-month"
-                )
-                enddate_year_element = datepicker_title_div[1].find_element(
-                    By.CLASS_NAME, "ui-datepicker-year"
-                )
-
-                enddate_month_text = enddate_month_element.text
-                enddate_year_text = enddate_year_element.text
-
-                full_enddate_calender = f"{enddate_month_text} {enddate_year_text}"
-
+                
+                startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
+                full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
+                print(full_startdate_calender,1111111111)
+                
+                
+                enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
+                full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
+                print(full_enddate_calender,22222)
+                
                 if (
                     User_start_date == full_startdate_calender
                     and User_end_date == full_enddate_calender
@@ -140,39 +137,18 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                             ).click()
                             sleep(3)
 
-                            datepicker_title_div = driver.find_elements(
-                                By.CLASS_NAME, "ui-datepicker-title"
-                            )
+                    
+                            
+                            startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
+                            full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
+                            print(full_startdate_calender,1111111111)
+                            
+                            
+                            enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
+                            full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
+                            print(full_enddate_calender,22222)
+                            
 
-                            # startdate
-                            startdate_month_element = datepicker_title_div[
-                                0
-                            ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                            startdate_year_element = datepicker_title_div[
-                                0
-                            ].find_element(By.CLASS_NAME, "ui-datepicker-year")
-
-                            startdate_month_text = startdate_month_element.text
-                            startdate_year_text = startdate_year_element.text
-
-                            full_startdate_calender = (
-                                f"{startdate_month_text} {startdate_year_text}"
-                            )
-
-                            # enddate
-                            enddate_month_element = datepicker_title_div[
-                                1
-                            ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                            enddate_year_element = datepicker_title_div[1].find_element(
-                                By.CLASS_NAME, "ui-datepicker-year"
-                            )
-
-                            enddate_month_text = enddate_month_element.text
-                            enddate_year_text = enddate_year_element.text
-
-                            full_enddate_calender = (
-                                f"{enddate_month_text} {enddate_year_text}"
-                            )
                             if not full_enddate_calender:
                                 break
 
@@ -209,157 +185,22 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                                 break
                         except Exception as e:
                             break
-                else:
-                    if (
-                        User_start_date != full_startdate_calender
-                        or User_start_date != full_enddate_calender
-                    ):
-                        while (
-                            User_start_date != full_startdate_calender
-                            or User_start_date != full_enddate_calender
-                        ):
-                            try:
-                                WebDriverWait(driver, 40).until(
-                                    EC.element_to_be_clickable(
-                                        (By.CLASS_NAME, "ui-datepicker-next")
-                                    )
-                                ).click()
-                                sleep(3)
-
-                                datepicker_title_div = driver.find_elements(
-                                    By.CLASS_NAME, "ui-datepicker-title"
-                                )
-
-                                # startdate
-                                startdate_month_element = datepicker_title_div[
-                                    0
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                                startdate_year_element = datepicker_title_div[
-                                    0
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-year")
-
-                                startdate_month_text = startdate_month_element.text
-                                startdate_year_text = startdate_year_element.text
-
-                                full_startdate_calender = (
-                                    f"{startdate_month_text} {startdate_year_text}"
-                                )
-
-                                # enddate
-                                enddate_month_element = datepicker_title_div[
-                                    1
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                                enddate_year_element = datepicker_title_div[
-                                    1
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-year")
-
-                                enddate_month_text = enddate_month_element.text
-                                enddate_year_text = enddate_year_element.text
-
-                                full_enddate_calender = (
-                                    f"{enddate_month_text} {enddate_year_text}"
-                                )
-                                if not full_enddate_calender:
-                                    print("Error: End date not getting updated.")
-                                    break
-
-                                get_all_available_dates_first_calender = driver.find_elements(
-                                    By.CSS_SELECTOR,
-                                    "#ui-datepicker-div > div.ui-datepicker-group.ui-datepicker-group-first > table > tbody > tr>td>a",
-                                )
-                                get_all_available_dates_last_calender = driver.find_elements(
-                                    By.CSS_SELECTOR,
-                                    "#ui-datepicker-div > div.ui-datepicker-group.ui-datepicker-group-last > table > tbody > tr>td>a",
-                                )
-                                if get_all_available_dates_first_calender:
-                                    location_found = True
-
-                                    available_date = random.choice(
-                                        get_all_available_dates_first_calender
-                                    )
-                                    available_date.click()
-                                elif get_all_available_dates_last_calender:
-                                    location_found = True
-
-                                    available_date = random.choice(
-                                        get_all_available_dates_last_calender
-                                    )
-                                    available_date.click()
-
-                                if User_start_date == full_startdate_calender:
-                                    get_all_available_dates_first_calender = driver.find_elements(
-                                        By.CSS_SELECTOR,
-                                        "#ui-datepicker-div > div.ui-datepicker-group.ui-datepicker-group-first > table > tbody > tr>td>a",
-                                    )
-                                    if get_all_available_dates_first_calender:
-                                        location_found = True
-
-                                        available_date = random.choice(
-                                            get_all_available_dates_first_calender
-                                        )
-                                        available_date.click()
-
-                                elif User_start_date == full_enddate_calender:
-                                    get_all_available_dates_last_calender = driver.find_elements(
-                                        By.CSS_SELECTOR,
-                                        "#ui-datepicker-div > div.ui-datepicker-group.ui-datepicker-group-last > table > tbody > tr>td>a",
-                                    )
-                                    if get_all_available_dates_last_calender:
-                                        location_found = True
-
-                                        available_date = random.choice(
-                                            get_all_available_dates_last_calender
-                                        )
-                                        available_date.click()
-
-                                if (
-                                    User_end_date == full_startdate_calender
-                                    or User_end_date == full_enddate_calender
-                                ):
-                                    print()
-                                    break
-                            except Exception as e:
-                                break
-                    elif User_start_date == full_startdate_calender:
+                else:                    
+                    if User_start_date == full_startdate_calender:
                         print("inside the loop")
                         while (
                             User_end_date != full_startdate_calender
                             or User_end_date != full_enddate_calender
                         ):
                             try:
-                                datepicker_title_div = driver.find_elements(
-                                    By.CLASS_NAME, "ui-datepicker-title"
-                                )
-
-                                # startdate
-                                startdate_month_element = datepicker_title_div[
-                                    0
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                                startdate_year_element = datepicker_title_div[
-                                    0
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-year")
-
-                                startdate_month_text = startdate_month_element.text
-                                startdate_year_text = startdate_year_element.text
-
-                                full_startdate_calender = (
-                                    f"{startdate_month_text} {startdate_year_text}"
-                                )
-
-                                # enddate
-                                enddate_month_element = datepicker_title_div[
-                                    1
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-month")
-                                enddate_year_element = datepicker_title_div[
-                                    1
-                                ].find_element(By.CLASS_NAME, "ui-datepicker-year")
-
-                                enddate_month_text = enddate_month_element.text
-                                enddate_year_text = enddate_year_element.text
-
-                                full_enddate_calender = (
-                                    f"{enddate_month_text} {enddate_year_text}"
-                                )
+                                startdate_month_element,startdate_year_element=get_calendar_start_month_year_elements(driver)
+                                full_startdate_calender = get_full_calendar_date(startdate_month_element,startdate_year_element)
+                                print(full_startdate_calender,1111111111)
+                                
+                                
+                                enddate_month_element,enddate_year_element=get_calendar_end_month_year_elements(driver)
+                                full_enddate_calender = get_full_calendar_date(enddate_month_element,enddate_year_element)
+                                print(full_enddate_calender,22222)
                                 if not full_enddate_calender:
                                     print("Error: End date not getting updated.")
                                     break
@@ -411,6 +252,8 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
 
             if location_found:
                 break
+            
+                
 
         else:
             selected_locations = [
@@ -422,6 +265,8 @@ def interact_with_dropdown(driver, User_start_date, User_end_date, selected_opti
                 User_end_date,
                 selected_options=selected_locations,
             )
+    if not location_found:        
+        interact_with_dropdown(driver, User_start_date, User_end_date, selected_options)
 
     return location_found
 
@@ -464,9 +309,9 @@ def appointments_submit(driver):
         driver.find_element(By.ID, "appointments_consulate_appointment_time")
     )
     selected_time = time_dropdown.first_selected_option.text
-    WebDriverWait(driver, 40).until(
-        EC.element_to_be_clickable((By.ID, "appointments_submit"))
-    ).click()
+    # WebDriverWait(driver, 40).until(
+    #     EC.element_to_be_clickable((By.ID, "appointments_submit"))
+    # ).click()
     print(
         "Appoinment booked",
         "\n\n",
