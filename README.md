@@ -1,5 +1,5 @@
 # Automate Visa Appointment Service 
-
+In the Auto_appointment_booking_bot, I have implemented the method that schedules appointments for US flights occurring earlier date within the provided date range...
 ### Setup environment
 ```
 python3.11 -m venv venv
